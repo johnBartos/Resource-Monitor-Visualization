@@ -8,7 +8,6 @@ const pruneReadings = (readings, cutoff) => {
   return readings.filter(e => e.date >= cutoffDate);
 };
 
-
 export default (state = initialState, action) => {
   switch (action.type) {
     case 'READING_RECEIVED':
