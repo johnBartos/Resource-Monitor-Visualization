@@ -41,7 +41,7 @@ describe('load reducer', function () {
 
   it('prunes readings below the threshold on READING_RECEIVED', function () {
     const oldReading = {
-      date: now - initialState.threshold
+      date: now - initialState.threshold - 1
     };
     const newReading = {
       date: now
