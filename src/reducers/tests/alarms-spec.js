@@ -4,14 +4,14 @@ import alarms from '../alarms';
 import loadAlarm from '../loadAlarm';
 import test from '../test';
 
-describe('load reducer', function () {
+describe('alarms reducer', function () {
   let initialState;
   let now;
 
   beforeEach(function () {
     initialState = {
       loadAlarms: {},
-      alarmEvents: {}
+      loadAlarmEvents: {}
     };
     now = Date.now();
   });
@@ -27,6 +27,9 @@ describe('load reducer', function () {
       loadAlarms: {
         ...initialState.loadAlarms,
         0: loadAlarm(undefined, {})
+      },
+      loadAlarmEvents: {
+        0: []
       }
     };
 
@@ -41,11 +44,13 @@ describe('load reducer', function () {
   // todo: sinon mock
   it('updates load alarms on READING_RECEIVED', function () {
     initialState.loadAlarms.foo = {};
+    initialState.loadAlarmEvents.foo = [];
     const action = {
       type: 'READING_RECEIVED',
       payload: {
-        id: 0,
-        value: 1
+        id: 'foo',
+        value: 1,
+        interval: 1000
       }
     };
 
@@ -53,6 +58,9 @@ describe('load reducer', function () {
       ...initialState,
       loadAlarms: {
         foo: loadAlarm({}, action)
+      },
+      loadAlarmEvents: {
+        foo: []
       }
     };
 

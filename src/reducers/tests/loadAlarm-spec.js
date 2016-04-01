@@ -17,7 +17,7 @@ const underThresholdReading = (date) => {
   };
 };
 
-describe('load reducer', function () {
+describe('loadAlarm reducer', function () {
   let initialState;
   let now;
 
@@ -48,7 +48,7 @@ describe('load reducer', function () {
 
       const actual = loadAlarm(initialState, {
         type: 'READING_RECEIVED',
-        reading
+        payload: reading
       });
 
       expect(actual).to.deep.equal(expected);
@@ -67,7 +67,7 @@ describe('load reducer', function () {
 
       const actual = loadAlarm(initialState, {
         type: 'READING_RECEIVED',
-        reading: underThresholdReading()
+        payload: underThresholdReading()
       });
 
       expect(actual).to.deep.equal(expected);
@@ -88,7 +88,7 @@ describe('load reducer', function () {
 
       const actual = loadAlarm(initialState, {
         type: 'READING_RECEIVED',
-        reading: overThresholdReading(now)
+        payload: overThresholdReading(now)
       });
 
       expect(actual).to.deep.equal(expected);
