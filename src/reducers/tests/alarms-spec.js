@@ -43,8 +43,9 @@ describe('load reducer', function () {
     initialState.loadAlarms.foo = {};
     const action = {
       type: 'READING_RECEIVED',
-      readings: {
-        foo: 0
+      payload: {
+        id: 0,
+        value: 1
       }
     };
 

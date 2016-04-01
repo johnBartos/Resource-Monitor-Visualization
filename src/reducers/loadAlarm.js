@@ -33,7 +33,7 @@ const update = (state, reading) => {
 export default (state = initialState, action) => {
   switch (action.type) {
     case 'READING_RECEIVED':
-      return update(state, action.reading);
+      return update(state, action.payload);
 
     default:
       return state;

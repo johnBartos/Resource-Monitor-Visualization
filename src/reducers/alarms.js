@@ -5,39 +5,20 @@ const initialState = {
   loadAlarmEvents: {}
 };
 
-const updateLoadAlarmStates = (state, action) => {
-  const { loadAlarms } = state;
-  const nextAlarmStates = {};
-
-  for (const id of Object.keys(loadAlarms)) {
-    const reading = action.readings[id];
-    if (typeof reading !== 'undefined') {
-      nextAlarmStates[id] = loadAlarm(loadAlarms[id], {
-        type: 'READING_RECEIVED',
-        date: reading.date,
-        value: reading.value
-      });
-    }
+const updateAlarm = (state, action) => {
+  const lastAlarmState = state.loadAlarms[action.payload.id];
+  if (!lastAlarmState) {
+    return;
   }
-
-  return nextAlarmStates;
+  return loadAlarm(lastAlarmState, action);
 };
 
-const gatherLoadAlarms = (loadAlarms) => {
-  const alarmEvents = {};
-
-  for (const id of Object.keys(loadAlarms)) {
-    const alarm = loadAlarms[id];
-    if (alarm.triggered) {
-      alarmEvents[id] = alarm.message;
-    }
+const addAlarmEvents = (state, nextAlarmState, payload) => {
+  let alarms = state.loadAlarmEvents[payload.id] ? state.loadAlarmEvents[payload.id].slice() : [];
+  if (nextAlarmState.triggered) {
+    alarms.push('Triggered on ' + payload.date);
   }
-
-  return alarmEvents;
-};
-
-const resetAlarm = () => {
-  return loadAlarm(undefined, {});
+  return alarms;
 };
 
 export default (state = initialState, action) => {
@@ -52,19 +33,25 @@ export default (state = initialState, action) => {
       };
 
     case 'READING_RECEIVED':
-      const nextLoadAlarmStates = updateLoadAlarmStates(state, action);
-      const nextLoadAlarmEvents = gatherLoadAlarms(nextLoadAlarmStates);
+      let nextAlarmState = updateAlarm(state, action);
+      if (!nextAlarmState) {
+        return state;
+      }
+      const alarms = addAlarmEvents(state, nextAlarmState, action.payload);
 
-      for (const id of Object.keys(nextLoadAlarmEvents)) {
-        nextLoadAlarmStates[id] = resetAlarm();
+      if (nextAlarmState.triggered) {
+        nextAlarmState = loadAlarm(undefined, {});
       }
 
       return {
         ...state,
-        loadAlarms: { ...nextLoadAlarmStates },
+        loadAlarms: {
+          ...state.loadAlarms,
+          [action.id]: nextAlarmState
+        },
         alarmEvents: {
-          ...state.loadAlarmEvents,
-          ...nextLoadAlarmEvents
+          ...state.alarmEvents,
+          [action.id]: alarms
         }
       };
 
