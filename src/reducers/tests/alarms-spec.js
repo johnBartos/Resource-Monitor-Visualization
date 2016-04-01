@@ -65,4 +65,8 @@ describe('alarms reducer', function () {
     const actual = alarms(initialState, action);
     expect(actual).to.deep.equal(expected);
   });
+
+  it('adds an alarm when triggered is true and alarming is true', function () {
+
+  });
 });

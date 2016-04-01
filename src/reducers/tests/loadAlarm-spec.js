@@ -40,7 +40,7 @@ describe('loadAlarm reducer', function () {
 
   describe('READING_RECEIVED', function () {
     describe('alarming is true', function () {
-      it('increments the counter with the interval when the value is above the threshold', function () {
+      it('increments counter if value is above threshold', function () {
         const reading = overThresholdReading();
 
         const expected = {
@@ -56,7 +56,7 @@ describe('loadAlarm reducer', function () {
         expect(actual).to.deep.equal(expected);
       });
 
-      it('resets the counter if the reading value is below the threshold', function () {
+      it('resets counter if value is below threshold', function () {
         initialState = {
           ...initialState,
           counter: 1000
@@ -75,7 +75,7 @@ describe('loadAlarm reducer', function () {
         expect(actual).to.deep.equal(expected);
       });
 
-      it('sets triggered to true and alarming to true when the counter exceeds the duration', function () {
+      it('sets triggered to true and alarming to true if counter exceeds duration', function () {
         initialState = {
           ...initialState,
           duration: 10,
@@ -97,15 +97,15 @@ describe('loadAlarm reducer', function () {
         expect(actual).to.deep.equal(expected);
       });
     });
-    describe('alarming is false', function () {
+    describe('alarming is true', function () {
       beforeEach(function () {
         initialState = {
           ...initialState,
           alarming: true
-        }
+        };
       });
 
-      it('increments the counter with the interval when the value is below the threshold', function () {
+      it('increments the counter if value is below threshold', function () {
         const reading = underThresholdReading();
 
         const expected = {
@@ -121,7 +121,7 @@ describe('loadAlarm reducer', function () {
         expect(actual).to.deep.equal(expected);
       });
 
-      it('resets the counter if the reading value is below the threshold', function () {
+      it('resets the counter if value is above threshold', function () {
         initialState = {
           ...initialState,
           counter: 1000
@@ -134,13 +134,13 @@ describe('loadAlarm reducer', function () {
 
         const actual = loadAlarm(initialState, {
           type: 'READING_RECEIVED',
-          payload: underThresholdReading()
+          payload: overThresholdReading()
         });
 
         expect(actual).to.deep.equal(expected);
       });
 
-      it('sets triggered to true and alarming to true when the counter exceeds the duration', function () {
+      it('sets triggered to true and alarming to false when counter exceeds duration', function () {
         initialState = {
           ...initialState,
           duration: 10,
@@ -151,12 +151,12 @@ describe('loadAlarm reducer', function () {
           ...initialState,
           counter: 0,
           triggered: true,
-          alarming: true
+          alarming: false
         };
 
         const actual = loadAlarm(initialState, {
           type: 'READING_RECEIVED',
-          payload: overThresholdReading(now)
+          payload: underThresholdReading(now)
         });
 
         expect(actual).to.deep.equal(expected);

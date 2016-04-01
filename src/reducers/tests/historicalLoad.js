@@ -1,14 +1,14 @@
 import { expect } from 'chai';
-import load from '../load';
+import load from '../historicalLoad';
 
-describe('load reducer', function () {
+describe('historicalLoad reducer', function () {
   let initialState;
   let now;
 
   beforeEach(function () {
     initialState = {
       threshold: 10 * 60 * 1000,
-      readings: []
+      readings: {}
     };
     now = Date.now();
   });
@@ -20,20 +20,21 @@ describe('load reducer', function () {
 
   it('handles READING_RECEIVED', function () {
     const reading = {
+      id: 0,
       date: now,
-      one: 1,
-      five: 5,
-      ten: 10
+      value: 0
     };
 
     const expected = {
       ...initialState,
-      readings: [reading]
+      readings: {
+        0: [{ date: now, value: 0 }]
+      }
     };
 
     const actual = load(initialState, {
       type: 'READING_RECEIVED',
-      reading
+      payload: reading
     });
 
     expect(actual).to.deep.equal(expected);
@@ -41,25 +42,32 @@ describe('load reducer', function () {
 
   it('prunes readings below the threshold on READING_RECEIVED', function () {
     const oldReading = {
-      date: now - initialState.threshold - 1
+      date: now - initialState.threshold - 1,
+      value: 0
     };
     const newReading = {
-      date: now
+      id: 0,
+      date: now,
+      value: 2
     };
 
     initialState = {
       ...initialState,
-      readings: [oldReading]
+      readings: {
+        0: [oldReading]
+      }
     };
 
     const expected = {
       ...initialState,
-      readings: [newReading]
+      readings: {
+        0: [{ date: newReading.date, value: newReading.value }]
+      }
     };
 
     const actual = load(initialState, {
       type: 'READING_RECEIVED',
-      reading: newReading
+      payload: newReading
     });
 
     expect(actual).to.deep.equal(expected);
