@@ -16,7 +16,12 @@ const updateAlarm = (state, action) => {
 const addAlarmEvents = (state, nextAlarmState, payload) => {
   let alarms = state.loadAlarmEvents[payload.id].slice();
   if (nextAlarmState.triggered) {
-    alarms.push('Triggered on ' + payload.date);
+    if (nextAlarmState.alarming) {
+      alarms.push('Resolved on ' + payload.date);
+    }
+    else {
+      alarms.push('Triggered on ' + payload.date);
+    }
   }
   return alarms;
 };
@@ -44,7 +49,7 @@ export default (state = initialState, action) => {
       }
       const alarms = addAlarmEvents(state, nextAlarmState, action.payload);
 
-      if (nextAlarmState.triggered) {
+      if (nextAlarmState.triggered && nextAlarmState.alarming) {
         nextAlarmState = loadAlarm(undefined, {});
       }
 

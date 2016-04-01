@@ -1,8 +1,6 @@
 import { expect } from 'chai';
-import sinon from 'sinon';
 import alarms from '../alarms';
 import loadAlarm from '../loadAlarm';
-import test from '../test';
 
 describe('alarms reducer', function () {
   let initialState;

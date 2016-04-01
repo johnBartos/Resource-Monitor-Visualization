@@ -3,14 +3,14 @@ const initialState = {
   counter: 0,
   threshold: 1,
   triggered: false,
-  message: undefined
+  alarming: false
 };
 
-const update = (state, reading) => {
-  let { counter, threshold, duration } = state;
+const update = (state, reading, comparator) => {
+  let { counter, threshold, duration, alarming } = state;
   let triggered = false;
 
-  if (reading.value > threshold) {
+  if (comparator(reading.value, threshold)) {
     counter += reading.interval;
   }
   else {
@@ -20,20 +20,25 @@ const update = (state, reading) => {
   if (counter >= duration) {
     triggered = true;
     counter = 0;
+    alarming = !alarming;
   }
 
   return {
     ...state,
     counter,
-    triggered
+    triggered,
+    alarming
   };
 };
 
+const nonAlarmingFunc = (a, b) => a > b;
+const alarmingFunc = (a, b) => a < b;
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case 'READING_RECEIVED':
-      return update(state, action.payload);
+      const comparatorFunc = state.alarming ? alarmingFunc : nonAlarmingFunc;
+      return update(state, action.payload, comparatorFunc);
 
     default:
       return state;
