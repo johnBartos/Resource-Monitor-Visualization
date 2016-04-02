@@ -4,7 +4,7 @@ import * as graph from '../../utils/graph';
 
 const style = {
   height: 250,
-  width: 1000
+  width: 1250
 };
 
 const Graph = React.createClass({
@@ -26,11 +26,7 @@ const Graph = React.createClass({
         width: style.width
       };
 
-      graph.draw(svgOptions, [
-        { value: 1, date: new Date(Date.now()) },
-        { value: 2, date: new Date(Date.now() + 10000) },
-        { value: 3, date: new Date(Date.now() + 10000) }
-      ]);
+      graph.draw(svgOptions, this.props.readings);
     }
     return (
       <div id="Graph"></div>

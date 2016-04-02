@@ -1,22 +1,22 @@
-export function pushOverReading() {
+export function pushOneReading() {
   return {
     type: 'READING_RECEIVED',
     payload: {
       id: 'one',
       date: Date.now(),
-      value: 2,
+      value: Math.random() * 10,
       interval: 120000 - 1
     }
   };
 }
 
-export function pushUnderReading() {
+export function pushTwoReading() {
   return {
     type: 'READING_RECEIVED',
     payload: {
-      id: 'one',
+      id: 'two',
       date: Date.now(),
-      value: 0.5,
+      value: Math.random() * 10,
       interval: 120000 - 1
     }
   };
