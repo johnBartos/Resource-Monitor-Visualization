@@ -11,22 +11,13 @@ const updateAlarm = (state, action) => {
 };
 
 const addAlarmEvents = (state, nextAlarmState, payload) => {
-  let alarms = state.loadAlarmEvents[payload.id].slice();
+  const alarms = state.loadAlarmEvents[payload.id].slice();
   if (nextAlarmState.triggered) {
-    if (nextAlarmState.alarming) {
-      alarms.push({
-        date: payload.date,
-        value: payload.value,
-        resolution: false
-      });
-    }
-    else {
-      alarms.push({
-        date: payload.date,
-        value: payload.value,
-        resolution: true
-      });
-    }
+    alarms.push({
+      date: payload.date,
+      value: payload.value,
+      resolution: !nextAlarmState.alarming
+    });
   }
   return alarms;
 };
@@ -38,11 +29,11 @@ export default (state = initialState, action) => {
         ...state,
         loadAlarms: {
           ...state.loadAlarms,
-          [action.id]: loadAlarm(undefined, {})
+          [action.payload.id]: loadAlarm(undefined, {})
         },
         loadAlarmEvents: {
           ...state.loadAlarmEvents,
-          [action.id]: []
+          [action.payload.id]: []
         }
       };
 
