@@ -62,3 +62,26 @@ export default (state = initialState, action) => {
       return state;
   }
 };
+
+
+function groupLoadAlarmEvents(events, id) {
+  const groupedEvents = [];
+  for (let i = 0; i < events.length; i += 2) {
+    groupedEvents.push({
+      id,
+      triggered: events[i],
+      resolved: events[i + 1]
+    });
+  }
+
+  return groupedEvents;
+}
+
+export function getLoadAlarmEvents(state) {
+  let events = [];
+  for (const key of Object.keys(state.alarms.loadAlarmEvents)) {
+    events = events.concat(groupLoadAlarmEvents(state.alarms.loadAlarmEvents[key], key));
+  }
+
+  return events;
+}

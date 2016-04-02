@@ -1,7 +1,6 @@
 import loadGenerator from '../utils/loadGenerator';
 
 export function pushOneReading() {
-  console.log(loadGenerator.next().value)
   return {
     type: 'READING_RECEIVED',
     payload: {

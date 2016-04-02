@@ -26,7 +26,7 @@ const Graph = React.createClass({
         width: style.width
       };
 
-      graph.draw(svgOptions, this.props.readings);
+      graph.draw(svgOptions, this.props.readings, this.props.alarms);
     }
     return (
       <div id="Graph"></div>

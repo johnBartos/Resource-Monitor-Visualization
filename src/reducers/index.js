@@ -7,3 +7,6 @@ export default combineReducers({
   historicalLoad
 });
 
+
+export { getLoadAlarmEvents } from '../reducers/alarms';
+

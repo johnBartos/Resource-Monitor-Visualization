@@ -1,4 +1,4 @@
-const readings = [1, 2, 3, 4];
+const readings = [2, 2, 0.5, 0.5];
 let index = 0;
 
 function* loadGenerator() {
