@@ -1,10 +1,13 @@
+import loadGenerator from '../utils/loadGenerator';
+
 export function pushOneReading() {
+  console.log(loadGenerator.next().value)
   return {
     type: 'READING_RECEIVED',
     payload: {
       id: 'one',
       date: Date.now(),
-      value: Math.random() * 10,
+      value: loadGenerator.next().value,
       interval: 120000 - 1
     }
   };
