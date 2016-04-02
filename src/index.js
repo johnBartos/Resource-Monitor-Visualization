@@ -4,12 +4,16 @@ import { Provider } from 'react-redux';
 
 import configureStore from './store';
 import App from './containers/App';
+import Visualization from './containers/Visualization';
+
 
 const store = configureStore();
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <App>
+      <Visualization />
+    </App>
   </Provider>,
   document.getElementById('root')
 );
