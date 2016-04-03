@@ -1,0 +1,41 @@
+/*
+background: #263238;
+darker background: #222F35;
+teal blue: #6DC2B8;
+lime green: #C3E887
+red: #F67560;
+purple: #C792EA;
+*/
+
+html {
+    background-color: #263238;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #6DC2B8;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    fill: white;
+    /*stroke: white*/
+}
+
+.line {
+    fill: none;
+    stroke: url(#gradient);
+    stroke-width: 1.5px;
+}
+
+.area {
+    fill: url(#gradient);
+    stroke-width: 0;
+}
+
+#Alarms {
+    color: #C792EA;
+    height: 200px;
+    overflow: auto;
+}

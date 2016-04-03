@@ -1,9 +1,9 @@
 const normalLoad = () => Math.random();
 const highLoad = () => Math.random() + 1;
 
-const oneMinAvg = [...Array(12).fill(0), ...Array(12).fill(1)];
-const fiveMinAvg = [...Array(18).fill(0), ...Array(18).fill(1)];
-const fifteenMinAvg = [...Array(24).fill(0), ...Array(24).fill(1)];
+const oneMinAvg = [...Array(12).fill(1), ...Array(12).fill(0)];
+const fiveMinAvg = [...Array(18).fill(1), ...Array(18).fill(0)];
+const fifteenMinAvg = [...Array(24).fill(1), ...Array(24).fill(0)];
 
 let oneIndex = 0;
 let fiveIndex = 0;

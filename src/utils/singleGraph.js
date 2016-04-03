@@ -1,7 +1,8 @@
 import d3 from 'd3';
 
 export function draw(svgOptions, readings, alarms) {
-  svgOptions.element.selectAll('*').remove();
+  const node = d3.select(svgOptions.node);
+  node.selectAll('*').remove();
   const margin = {
     top: 30,
     right: 30,
@@ -30,7 +31,13 @@ export function draw(svgOptions, readings, alarms) {
     .x(d => x(d.date))
     .y(d => y(d.value));
 
-  const svg = svgOptions.element
+  const area = d3.svg.area()
+    .interpolate('basis')
+    .x(d => x(d.date))
+    .y0(height)
+    .y1(d => y(d.value));
+
+  const svg = node
     .append('svg')
     .attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom)
@@ -46,18 +53,53 @@ export function draw(svgOptions, readings, alarms) {
   x.domain([minX, maxX]);
   y.domain([minY, maxY]);
 
+  svg.append('linearGradient')
+    .attr('id', 'gradient')
+    .attr('gradientUnits', 'userSpaceOnUse')
+    .attr('x1', 0).attr('y1', y(0))
+    .attr('x2', 0).attr('y2', y(1))
+    .selectAll('stop')
+    .data([
+      { offset: '0%', color: '#C3E887' },
+        { offset: '100%', color: '#F67560' }
+    ])
+    .enter().append('stop')
+    .attr('offset', d => d.offset)
+    .attr('stop-color', d => d.color);
+
+  svg.append('path')
+    .datum(readings)
+    .attr('class', 'area')
+    .attr('d', area);
+
+  svg.append('path')
+    .attr('class', 'line')
+    .attr('d', line(readings));
+
   const alarm = svg.selectAll('.alarm')
     .data(alarms)
     .enter().append('g')
     .attr('class', 'alarm');
 
   alarm.append('rect')
-    .attr('class', 'bar')
+    .attr('class', 'highLoad')
+    .attr('x', d => {
+      return x(d.triggered.date - (2 * 60 * 1000) + 10 * 1000);
+    })
+    .attr('width', d => x(d.triggered.date) - x(d.triggered.date - (2 * 60 * 1000) +  10 * 1000))
+    .attr('y', 0)
+    .attr('height', height)
+    .attr('fill', 'red')
+    .attr('opacity', 0.1);
+
+
+  alarm.append('rect')
+    .attr('class', 'alarming')
     .attr('x', d => x(d.triggered.date))
     .attr('width', d => d.resolved ? (x(d.resolved.date) - x(d.triggered.date)) : (x(maxX) - x(d.triggered.date)))
     .attr('y', 0)
     .attr('height', height)
-    .attr('fill', 'red')
+    .attr('fill', 'yellow')
     .attr('opacity', 0.1);
 
   alarm.append('text')
@@ -76,11 +118,6 @@ export function draw(svgOptions, readings, alarms) {
     .attr('x', d => d.resolved ? x(d.resolved.date) : 0)
     .attr('y', 0)
     .text('resolved');
-
-  svg.append('path')
-    .attr('class', 'line')
-    .attr('d', line(readings))
-    .style('stroke', 'blue');
 
   svg.append('g')
     .attr('class', 'x axis')

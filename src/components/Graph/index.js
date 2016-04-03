@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDom from 'react-dom';
 import * as graph from '../../utils/singleGraph';
+import responsive from '../Responsive';
 
 const style = {
-  height: 200,
-  width: 1200
+  height: 200
 };
 
 const Graph = React.createClass({
@@ -12,29 +12,19 @@ const Graph = React.createClass({
     readings: PropTypes.array.isRequired,
     alarms: PropTypes.array.isRequired
   },
-  componentDidMount() {
-    this.setState({
-      graphNode: graph.mount(ReactDom.findDOMNode(this))
-    });
-  },
-  componentWillUnmount() {
-    if (this.state) {
-      graph.unmount(this.state.graphNode);
-    }
-  },
   render() {
-    if (this.state) {
+    if (this.props.node) {
       const svgOptions = {
-        element: this.state.graphNode,
+        node: this.props.node,
         height: style.height,
-        width: style.width
+        width: this.props.width
       };
       graph.draw(svgOptions, this.props.readings, this.props.alarms);
     }
     return (
-      <div id="Graph"></div>
+      <div className="ten columns" id="Graph"></div>
     );
   }
 });
 
-export default Graph;
+export default responsive(Graph);

@@ -13,6 +13,8 @@ const updateAlarm = (state, action) => {
 const addAlarmEvents = (state, nextAlarmState, payload) => {
   const alarms = state.loadAlarmEvents[payload.id].slice();
   if (nextAlarmState.triggered) {
+    console.log(new Date());
+    console.log(new Date(payload.date));
     alarms.push({
       date: payload.date,
       value: payload.value,

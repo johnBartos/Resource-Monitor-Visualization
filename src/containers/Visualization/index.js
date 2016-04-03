@@ -21,15 +21,15 @@ const Visualization = React.createClass({
   render() {
     const graphs = Object.keys(this.props.alarms).map(e => {
       return (
-        <section id="load" key={e}>
-          <Alarms
-            alarms={this.props.alarms[e]}
-          />
+        <div className="row u-full-width" id="load" key={e}>
           <Graph
             readings={this.props.readings[e]}
             alarms={this.props.alarms[e]}
           />
-        </section>
+          <Alarms
+            alarms={this.props.alarms[e]}
+          />
+        </div>
       );
     });
 

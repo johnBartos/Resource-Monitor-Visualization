@@ -3,9 +3,9 @@ import React, { Component, PropTypes } from 'react';
 const App = React.createClass({
   render() {
     return (
-      <section id="App">
+      <div className="container u-full-width">
         {this.props.children}
-      </section>
+      </div>
     );
   }
 });

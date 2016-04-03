@@ -1,7 +1,8 @@
 import d3 from 'd3';
 
 export function draw(svgOptions, readings, alarms) {
-  svgOptions.element.selectAll('*').remove();
+  const node = d3.select(svgOptions.node);
+  node.selectAll('*').remove();
   const margin = {
     top: 30,
     right: 30,
@@ -30,7 +31,7 @@ export function draw(svgOptions, readings, alarms) {
     .x(d => x(d.date))
     .y(d => y(d.value));
 
-  const svg = svgOptions.element
+  const svg = node
     .append('svg')
     .attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom)
