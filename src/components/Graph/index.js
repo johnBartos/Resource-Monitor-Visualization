@@ -3,8 +3,8 @@ import ReactDom from 'react-dom';
 import * as graph from '../../utils/graph';
 
 const style = {
-  height: 250,
-  width: 1250
+  height: 500,
+  width: 1200
 };
 
 const Graph = React.createClass({

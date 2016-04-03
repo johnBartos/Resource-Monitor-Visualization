@@ -1,34 +1,39 @@
 import loadGenerator from '../utils/loadGenerator';
 
-export function pushOneReading() {
+const batchActions = (...actions) => {
+  return {
+    type: 'BATCH_ACTIONS',
+    actions
+  };
+};
+
+const makeLoadReading = (id, date, value) => {
   return {
     type: 'READING_RECEIVED',
     payload: {
-      id: 'one',
-      date: Date.now(),
-      value: loadGenerator.next().value,
-      interval: 120000 - 1
+      id,
+      date,
+      value,
+      interval: 10 * 1000
     }
   };
+};
+
+export function getSystemLoad() {
+  const load = loadGenerator.next().value;
+  const now = Date.now();
+  return batchActions(
+    makeLoadReading('one', now, load.one),
+    makeLoadReading('five', now, load.five),
+    makeLoadReading('fifteen', now, load.fifteen)
+  );
 }
 
-export function pushTwoReading() {
-  return {
-    type: 'READING_RECEIVED',
-    payload: {
-      id: 'two',
-      date: Date.now(),
-      value: Math.random() * 10,
-      interval: 120000 - 1
-    }
-  };
-}
-
-export function addLoadAlarm() {
+export function addLoadAlarm(id) {
   return {
     type: 'LOAD_ALARM_ADDED',
     payload: {
-      id: 'one'
+      id
     }
   };
 }

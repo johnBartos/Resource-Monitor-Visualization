@@ -2,19 +2,24 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { pushOneReading, pushTwoReading, addLoadAlarm } from '../../actions';
+import { getSystemLoad, addLoadAlarm } from '../../actions';
 import { getLoadAlarmEvents } from '../../reducers';
 
 import Graph from '../../components/Graph';
 
 const Visualization = React.createClass({
+  componentDidMount() {
+    this.props.addLoadAlarm('one');
+    this.props.addLoadAlarm('five');
+    this.props.addLoadAlarm('fifteen');
+    this.props.getSystemLoad();
+    setInterval(() => {
+      this.props.getSystemLoad();
+    }, 10 * 1000);
+  },
   render() {
-    console.log(this.props.alarms);
     return (
       <section>
-        <button onClick={this.props.addLoadAlarm}>add alarm</button>
-        <button onClick={this.props.pushOneReading.bind('one')}>one reading</button>
-        <button onClick={this.props.pushTwoReading.bind('two')}>two reading</button>
         <Graph
           readings={this.props.readings}
           alarms={this.props.alarms}
@@ -33,8 +38,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
-    pushOneReading,
-    pushTwoReading,
+    getSystemLoad,
     addLoadAlarm
   }, dispatch);
 };

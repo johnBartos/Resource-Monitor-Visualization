@@ -18,12 +18,12 @@ export function draw(svgOptions, readings, alarms) {
   const xAxis = d3.svg.axis()
     .scale(x)
     .orient('bottom')
-    .ticks(5);
+    .ticks(20);
 
   const yAxis = d3.svg.axis()
     .scale(y)
     .orient('left')
-    .ticks(5);
+    .ticks(10);
 
   const line = d3.svg.line()
     .interpolate('basis')
@@ -44,10 +44,15 @@ export function draw(svgOptions, readings, alarms) {
   const color = d3.scale.category10();
   color.domain(readingsArray.map(d => d.key));
 
-  const minX = d3.min(readingsArray, kv => d3.min(kv.value, d => d.date));
-  const maxX = d3.max(readingsArray, kv => d3.max(kv.value, d => d.date));
-  const minY = d3.min(readingsArray, kv => d3.min(kv.value, d => d.value));
-  const maxY = d3.max(readingsArray, kv => d3.max(kv.value, d => d.value));
+  //const minX = d3.min(readingsArray, kv => d3.min(kv.value, d => d.date));
+  //const maxX = d3.max(readingsArray, kv => d3.max(kv.value, d => d.date));
+  //const minY = d3.min(readingsArray, kv => d3.min(kv.value, d => d.value));
+  //const maxY = d3.max(readingsArray, kv => d3.max(kv.value, d => d.value));
+
+  const minX = Date.now() - 600000;
+  const maxX = Date.now();
+  const minY = 0;
+  const maxY = 3;
 
   x.domain([minX, maxX]);
   y.domain([minY, maxY]);
@@ -78,11 +83,10 @@ export function draw(svgOptions, readings, alarms) {
     .attr('class', 'alarmText')
     .attr('text-anchor', 'middle')
     .attr('fill', 'black')
-    .attr('visibility', d => d.resolved)
+    .attr('visibility', d => d.resolved ? 'initial' : 'hidden')
     .attr('x', d => d.resolved ? x(d.resolved.date) : 0)
     .attr('y', 0)
     .text('resolved');
-
 
   const load = svg.selectAll('.load')
     .data(readingsArray)
