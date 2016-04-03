@@ -6,6 +6,7 @@ import { getSystemLoad, addLoadAlarm } from '../../actions';
 import { getLoadAlarmEvents } from '../../reducers';
 
 import Graph from '../../components/Graph';
+import Alarms from '../../components/Alarms';
 
 const Visualization = React.createClass({
   componentDidMount() {
@@ -18,12 +19,23 @@ const Visualization = React.createClass({
     }, 10 * 1000);
   },
   render() {
+    const graphs = Object.keys(this.props.alarms).map(e => {
+      return (
+        <section id="load" key={e}>
+          <Alarms
+            alarms={this.props.alarms[e]}
+          />
+          <Graph
+            readings={this.props.readings[e]}
+            alarms={this.props.alarms[e]}
+          />
+        </section>
+      );
+    });
+
     return (
       <section>
-        <Graph
-          readings={this.props.readings}
-          alarms={this.props.alarms}
-        />
+        {graphs}
       </section>
     );
   }

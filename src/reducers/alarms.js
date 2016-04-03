@@ -64,11 +64,10 @@ export default (state = initialState, action) => {
 };
 
 
-function groupLoadAlarmEvents(events, id) {
+function groupLoadAlarmEvents(events) {
   const groupedEvents = [];
   for (let i = 0; i < events.length; i += 2) {
     groupedEvents.push({
-      id,
       triggered: events[i],
       resolved: events[i + 1]
     });
@@ -78,9 +77,9 @@ function groupLoadAlarmEvents(events, id) {
 }
 
 export function getLoadAlarmEvents(state) {
-  let events = [];
+  const events = {};
   for (const key of Object.keys(state.alarms.loadAlarmEvents)) {
-    events = events.concat(groupLoadAlarmEvents(state.alarms.loadAlarmEvents[key], key));
+    events[key] = groupLoadAlarmEvents(state.alarms.loadAlarmEvents[key]);
   }
 
   return events;
