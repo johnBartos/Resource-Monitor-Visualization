@@ -6,7 +6,7 @@ the alert is resolved.
 #### [Live Demo!](https://johnbartos.github.io/Resource-Monitor-Visualization/)
 ###### (also works on your phone)
 
-![demo](https://i.imgur.com/kHA1ycH.png)
+![demo](https://i.imgur.com/wDM0wIp.png)
 
 ## Installing & Running
 - Pull the source code, obviously
