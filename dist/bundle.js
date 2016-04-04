@@ -29667,6 +29667,9 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	var twoMinutes = 2 * 60 * 1000;
+	var tenMinutes = 10 * 60 * 1000;
+
 	function draw(svgOptions, readings, alarms) {
 	  var node = _d2.default.select(svgOptions.node);
 	  node.selectAll('*').remove();
@@ -29701,7 +29704,7 @@
 
 	  var svg = node.append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).attr('preserveAspectRatio', 'xMidYMid meet').append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-	  var minX = Date.now() - 600000; // Date range: 10 minutes
+	  var minX = Date.now() - tenMinutes;
 	  var maxX = Date.now();
 	  var minY = 0;
 	  var maxY = 3;
@@ -29722,9 +29725,9 @@
 	  var alarm = svg.selectAll('.alarm').data(alarms).enter().append('g').attr('class', 'alarm');
 
 	  alarm.append('rect').attr('class', 'highLoad').attr('x', function (d) {
-	    return x(d.triggered.date - 2 * 60 * 1000);
+	    return x(d.triggered.date - twoMinutes);
 	  }).attr('width', function (d) {
-	    return x(d.triggered.date) - x(d.triggered.date - 2 * 60 * 1000);
+	    return x(d.triggered.date) - x(d.triggered.date - twoMinutes);
 	  }).attr('y', 0).attr('height', height).attr('fill', 'red').attr('opacity', 0.1);
 
 	  alarm.append('rect').attr('class', 'alarming').attr('x', function (d) {
@@ -29732,6 +29735,14 @@
 	  }).attr('width', function (d) {
 	    return d.resolved ? x(d.resolved.date) - x(d.triggered.date) : x(maxX) - x(d.triggered.date);
 	  }).attr('y', 0).attr('height', height).attr('fill', 'yellow').attr('opacity', 0.1);
+
+	  alarm.append('rect').attr('class', 'resolved').attr('x', function (d) {
+	    return d.resolved ? x(d.resolved.date - twoMinutes) : 0;
+	  }).attr('width', function (d) {
+	    return d.resolved ? x(d.resolved.date) - x(d.resolved.date - twoMinutes) : 0;
+	  }).attr('visibility', function (d) {
+	    return d.resolved ? 'visible' : 'hidden';
+	  }).attr('y', 0).attr('height', height).attr('fill', 'green').attr('opacity', 0.2);
 
 	  alarm.append('text').attr('class', 'alarmText').attr('text-anchor', 'middle').attr('fill', 'black').attr('visibility', function (d) {
 	    return x(d.triggered.date) > 0 ? 'visible' : 'hidden';

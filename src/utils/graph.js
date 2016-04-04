@@ -1,5 +1,8 @@
 import d3 from 'd3';
 
+const twoMinutes = 2 * 60 * 1000;
+const tenMinutes = 10 * 60 * 1000;
+
 export function draw(svgOptions, readings, alarms) {
   const node = d3.select(svgOptions.node);
   node.selectAll('*').remove();
@@ -45,7 +48,7 @@ export function draw(svgOptions, readings, alarms) {
     .append('g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-  const minX = Date.now() - 600000; // Date range: 10 minutes
+  const minX = Date.now() - tenMinutes;
   const maxX = Date.now();
   const minY = 0;
   const maxY = 3;
@@ -84,8 +87,8 @@ export function draw(svgOptions, readings, alarms) {
 
   alarm.append('rect')
     .attr('class', 'highLoad')
-    .attr('x', d => x(d.triggered.date - 2 * 60 * 1000))
-    .attr('width', d => x(d.triggered.date) - x(d.triggered.date - 2 * 60 * 1000))
+    .attr('x', d => x(d.triggered.date - twoMinutes))
+    .attr('width', d => x(d.triggered.date) - x(d.triggered.date - twoMinutes))
     .attr('y', 0)
     .attr('height', height)
     .attr('fill', 'red')
@@ -99,6 +102,17 @@ export function draw(svgOptions, readings, alarms) {
     .attr('height', height)
     .attr('fill', 'yellow')
     .attr('opacity', 0.1);
+
+  alarm.append('rect')
+    .attr('class', 'resolved')
+    .attr('x', d => d.resolved ? x(d.resolved.date - twoMinutes) : 0)
+    .attr('width', d => d.resolved ? x(d.resolved.date) - x(d.resolved.date - twoMinutes) : 0)
+    .attr('visibility', d => d.resolved ? 'visible' : 'hidden')
+    .attr('y', 0)
+    .attr('height', height)
+    .attr('fill', 'green')
+    .attr('opacity', 0.2);
+
 
   alarm.append('text')
     .attr('class', 'alarmText')
