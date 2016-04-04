@@ -3,7 +3,7 @@ Simulates CPU load
 The first alarm should trigger 2 minutes from start
 It should resolve 2 minutes 30 seconds from the trigger
  */
-const oneMinAvg = [...Array(30).fill(1).map(e => Math.random() + e), ...Array(30).fill(0).map(() => Math.random())];
+const oneMinAvg = [...Array(30).fill(1.1).map(e => Math.random() + e), ...Array(30).fill(0).map(() => Math.random())];
 
 const startIndex = 15;
 let oneIndex = startIndex;
