@@ -29542,7 +29542,7 @@
 	The first alarm should trigger 2 minutes from start
 	It should resolve 2 minutes 30 seconds from the trigger
 	 */
-	var oneMinAvg = [].concat(_toConsumableArray(Array(30).fill(1).map(function (e) {
+	var oneMinAvg = [].concat(_toConsumableArray(Array(30).fill(1.1).map(function (e) {
 	  return Math.random() + e;
 	})), _toConsumableArray(Array(30).fill(0).map(function () {
 	  return Math.random();
