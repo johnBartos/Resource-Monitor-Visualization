@@ -3,6 +3,9 @@ A React/Redux project to monitor CPU load and trigger load alarms. When the CPU 
 two minutes, an alert is generated. After triggering, when the average load is below 1 for the past two minutes,
 the alert is resolved.
 
+#### [Live Demo!](https://johnbartos.github.io/Resource-Monitor-Visualization/)
+###### (also works on your phone)
+
 ## Installing & Running
 - Pull the source code, obviously
 - `npm install` to install dependencies
