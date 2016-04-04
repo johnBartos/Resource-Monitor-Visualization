@@ -1,25 +1,20 @@
-const normalLoad = () => Math.random();
-const highLoad = () => Math.random() + 1;
+const oneMinAvg = [...Array(30).fill(1).map(e => Math.random() + e), ...Array(15).fill(0).map(() => Math.random())];
 
-const oneMinAvg = [...Array(12).fill(1), ...Array(12).fill(0)];
-const fiveMinAvg = [...Array(18).fill(1), ...Array(18).fill(0)];
-const fifteenMinAvg = [...Array(24).fill(1), ...Array(24).fill(0)];
-
-let oneIndex = 0;
-let fiveIndex = 0;
-let fifteenIndex = 0;
+let oneIndex = 15;
+let fiveIndex = 15;
+let fifteenIndex = 15;
 
 function* loadGenerator() {
   while (true) {
     yield {
-      one: oneMinAvg[oneIndex] ? highLoad() : normalLoad(),
-      five: fiveMinAvg[fiveIndex] ? highLoad() : normalLoad(),
-      fifteen: fifteenMinAvg[fifteenIndex] ? highLoad() : normalLoad(),
+      one: oneMinAvg[oneIndex],
+      five: oneMinAvg.slice(fiveIndex - 5, fiveIndex).reduce((p, c) => p + c) / 5,
+      fifteen: oneMinAvg.slice(fifteenIndex - 15, fifteenIndex).reduce((p, c) => p + c) / 15
     };
 
-    oneIndex = (oneIndex + 1) % oneMinAvg.length;
-    fiveIndex = (fiveIndex + 1) % fiveMinAvg.length;
-    fifteenIndex = (fifteenIndex + 1) % fifteenMinAvg.length;
+    oneIndex = Math.max(oneIndex, (oneIndex + 1) % oneMinAvg.length);
+    fiveIndex = Math.max(fiveIndex, (fiveIndex + 1) % oneMinAvg.length);
+    fifteenIndex = Math.max(fifteenIndex, (fifteenIndex + 1) % oneMinAvg.length);
   }
 }
 

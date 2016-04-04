@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDom from 'react-dom';
-import * as graph from '../../utils/singleGraph';
+import * as graph from '../../utils/graph';
 import responsive from '../Responsive';
 
 const style = {
@@ -13,6 +13,7 @@ const Graph = React.createClass({
     alarms: PropTypes.array.isRequired
   },
   render() {
+    // Children render before parents, so we need to wait for the responsive component
     if (this.props.node) {
       const svgOptions = {
         node: this.props.node,
@@ -22,9 +23,10 @@ const Graph = React.createClass({
       graph.draw(svgOptions, this.props.readings, this.props.alarms);
     }
     return (
-      <div className="ten columns" id="Graph"></div>
+      <div className="ten columns graph"></div>
     );
   }
 });
 
+// The responsive higher-order component passes the real DOM node and the width as props
 export default responsive(Graph);

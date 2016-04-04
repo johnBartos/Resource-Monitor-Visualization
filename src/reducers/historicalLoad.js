@@ -1,8 +1,9 @@
 const initialState = {
-  threshold: 10 * 60 * 1000, // milliseconds
+  threshold: 10 * 60 * 1000, // The range of readings we're collecting in ms = 10 minutes
   readings: {}
 };
 
+// We don't have a lot of readings so we can filter on each action without a large performance hit
 const pruneReadings = (readings, cutoff) => {
   const cutoffDate = Date.now() - cutoff;
   return readings.filter(e => e.date >= cutoffDate);

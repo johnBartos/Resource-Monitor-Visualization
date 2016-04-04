@@ -1,3 +1,8 @@
+/*
+  Makes a non-responsive component (i.e. a d3 graph) responsive
+  See https://github.com/johnBartos/react-d3-demo
+ */
+
 import React, { Component } from 'react';
 import ReactDom from 'react-dom';
 

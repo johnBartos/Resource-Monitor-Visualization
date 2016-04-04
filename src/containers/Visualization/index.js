@@ -1,33 +1,34 @@
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { getSystemLoad, addLoadAlarm } from '../../actions';
+import { getSystemLoad, addLoadAlarms } from '../../actions';
 import { getLoadAlarmEvents } from '../../reducers';
 
 import Graph from '../../components/Graph';
 import Alarms from '../../components/Alarms';
 
+// The load will appear on the graph in 10 seconds because we need at least 2 points to form a line
+
 const Visualization = React.createClass({
   componentDidMount() {
-    this.props.addLoadAlarm('one');
-    this.props.addLoadAlarm('five');
-    this.props.addLoadAlarm('fifteen');
+    this.props.addLoadAlarms('one', 'five', 'fifteen');
     this.props.getSystemLoad();
     setInterval(() => {
       this.props.getSystemLoad();
     }, 10 * 1000);
   },
   render() {
-    const graphs = Object.keys(this.props.alarms).map(e => {
+    const graphs = Object.keys(this.props.alarms).map(id => {
       return (
-        <div className="row u-full-width" id="load" key={e}>
+        <div className="row u-full-width load" key={id}>
           <Graph
-            readings={this.props.readings[e]}
-            alarms={this.props.alarms[e]}
+            readings={this.props.readings[id]}
+            alarms={this.props.alarms[id]}
           />
           <Alarms
-            alarms={this.props.alarms[e]}
+            id={id}
+            alarms={this.props.alarms[id]}
           />
         </div>
       );
@@ -51,7 +52,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
     getSystemLoad,
-    addLoadAlarm
+    addLoadAlarms
   }, dispatch);
 };
 

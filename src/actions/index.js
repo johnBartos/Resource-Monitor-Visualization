@@ -13,12 +13,22 @@ const makeLoadReading = (id, date, value) => {
     payload: {
       id,
       date,
-      value,
-      interval: 10 * 1000
+      value
     }
   };
 };
 
+const makeLoadAlarm = id => {
+  return {
+    type: 'LOAD_ALARM_ADDED',
+    payload: {
+      id
+    }
+  };
+};
+
+// Batching allows the reducers to handle several actions and push just one state
+// I use batching so I don't have to do a ton of looping in the reducers
 export function getSystemLoad() {
   const load = loadGenerator.next().value;
   const now = Date.now();
@@ -29,11 +39,7 @@ export function getSystemLoad() {
   );
 }
 
-export function addLoadAlarm(id) {
-  return {
-    type: 'LOAD_ALARM_ADDED',
-    payload: {
-      id
-    }
-  };
+export function addLoadAlarms(...ids) {
+  const actions = ids.map(e => makeLoadAlarm(e));
+  return batchActions(...actions);
 }

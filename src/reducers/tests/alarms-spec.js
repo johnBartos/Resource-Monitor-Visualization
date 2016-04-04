@@ -33,7 +33,9 @@ describe('alarms reducer', function () {
 
     const actual = alarms(initialState, {
       type: 'LOAD_ALARM_ADDED',
-      id: 0
+      payload: {
+        id: 0
+      }
     });
 
     expect(actual).to.deep.equal(expected);
@@ -47,8 +49,7 @@ describe('alarms reducer', function () {
       type: 'READING_RECEIVED',
       payload: {
         id: 'foo',
-        value: 1,
-        interval: 1000
+        value: 1
       }
     };
 
@@ -64,9 +65,5 @@ describe('alarms reducer', function () {
 
     const actual = alarms(initialState, action);
     expect(actual).to.deep.equal(expected);
-  });
-
-  it('adds an alarm when triggered is true and alarming is true', function () {
-
   });
 });

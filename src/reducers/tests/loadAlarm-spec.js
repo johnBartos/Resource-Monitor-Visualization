@@ -4,16 +4,14 @@ import loadAlarm from '../loadAlarm';
 const overThresholdReading = (date) => {
   return {
     date: date || Date.now(),
-    value: Number.MAX_SAFE_INTEGER,
-    interval: 10 * 1000
+    value: Number.MAX_SAFE_INTEGER
   };
 };
 
 const underThresholdReading = (date) => {
   return {
     date: date || Date.now(),
-    value: Number.MIN_SAFE_INTEGER,
-    interval: 10 * 1000
+    value: Number.MIN_SAFE_INTEGER
   };
 };
 
@@ -24,7 +22,7 @@ describe('loadAlarm reducer', function () {
   beforeEach(function () {
     initialState = {
       duration: 2 * 60 * 1000,
-      counter: 0,
+      startDate: undefined,
       threshold: 1,
       triggered: false,
       alarming: false
@@ -39,13 +37,13 @@ describe('loadAlarm reducer', function () {
   });
 
   describe('READING_RECEIVED', function () {
-    describe('alarming is true', function () {
-      it('increments counter if value is above threshold', function () {
-        const reading = overThresholdReading();
+    describe('alarming is false', function () {
+      it('sets startDate if value is above threshold', function () {
+        const reading = overThresholdReading(now);
 
         const expected = {
           ...initialState,
-          counter: reading.interval
+          startDate: now
         };
 
         const actual = loadAlarm(initialState, {
@@ -56,35 +54,49 @@ describe('loadAlarm reducer', function () {
         expect(actual).to.deep.equal(expected);
       });
 
-      it('resets counter if value is below threshold', function () {
+      it('does not set startDate if it is already set and value is above threshold', function () {
         initialState = {
           ...initialState,
-          counter: 1000
-        };
-
-        const expected = {
-          ...initialState,
-          counter: 0
+          startDate: now
         };
 
         const actual = loadAlarm(initialState, {
           type: 'READING_RECEIVED',
-          payload: underThresholdReading()
+          payload: overThresholdReading(now + 10)
+        });
+
+        expect(actual).to.deep.equal(initialState);
+      });
+
+      it('sets startDate to undefined if value is below threshold', function () {
+        initialState = {
+          ...initialState,
+          startDate: now
+        };
+
+        const expected = {
+          ...initialState,
+          startDate: undefined
+        };
+
+        const actual = loadAlarm(initialState, {
+          type: 'READING_RECEIVED',
+          payload: underThresholdReading(now)
         });
 
         expect(actual).to.deep.equal(expected);
       });
 
-      it('sets triggered to true and alarming to true if counter exceeds duration', function () {
+      it('sets triggered to true and alarming to true if time difference exceeds duration', function () {
         initialState = {
           ...initialState,
           duration: 10,
-          counter: 9
+          startDate: now - 10
         };
 
         const expected = {
           ...initialState,
-          counter: 0,
+          startDate: undefined,
           triggered: true,
           alarming: true
         };
@@ -105,31 +117,43 @@ describe('loadAlarm reducer', function () {
         };
       });
 
-      it('increments the counter if value is below threshold', function () {
-        const reading = underThresholdReading();
-
+      it('sets startDate if value is below threshold', function () {
         const expected = {
           ...initialState,
-          counter: reading.interval
+          startDate: now
         };
 
         const actual = loadAlarm(initialState, {
           type: 'READING_RECEIVED',
-          payload: reading
+          payload: underThresholdReading(now)
         });
 
         expect(actual).to.deep.equal(expected);
       });
 
-      it('resets the counter if value is above threshold', function () {
+      it('does not set startDate if it is already set and value is above threshold', function () {
         initialState = {
           ...initialState,
-          counter: 1000
+          startDate: now
+        };
+
+        const actual = loadAlarm(initialState, {
+          type: 'READING_RECEIVED',
+          payload: underThresholdReading(now + 10)
+        });
+
+        expect(actual).to.deep.equal(initialState);
+      });
+
+      it('resets startDate if value is above threshold', function () {
+        initialState = {
+          ...initialState,
+          startDate: now
         };
 
         const expected = {
           ...initialState,
-          counter: 0
+          startDate: undefined
         };
 
         const actual = loadAlarm(initialState, {
@@ -140,16 +164,16 @@ describe('loadAlarm reducer', function () {
         expect(actual).to.deep.equal(expected);
       });
 
-      it('sets triggered to true and alarming to false when counter exceeds duration', function () {
+      it('sets triggered to true and alarming to false if time difference exceeds duration', function () {
         initialState = {
           ...initialState,
           duration: 10,
-          counter: 9
+          startDate: now - 10
         };
 
         const expected = {
           ...initialState,
-          counter: 0,
+          startDate: undefined,
           triggered: true,
           alarming: false
         };
