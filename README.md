@@ -148,6 +148,9 @@ request, it either returns a high load reading or a normal load based on the cur
         - Can easily be set with Redux actions
     - Alarms added are hardcoded to 'one', 'five', and 'fifteen'
 
+##### Known Bugs
+1. On rare occassions, `loadGenerator` will produce a set of readings which result in a +10 second drift among the alarms. The normal difference between the the one minute average's first alarming period (trigger -> resolve) is 2:30. The bug results in 2:40. Tests show that the alarming logic is working as intended.
+
 
 The largest improvement, however, is adding tolerance for delays with regards to the updating of load at
 set intervals. This a problem for two reasons: `setInterval` isn't guaranteed to delay by the set amount, and the request
