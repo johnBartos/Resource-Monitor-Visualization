@@ -6,7 +6,7 @@ NOTE: The soonest a resolution to an alarm can occur is 10s (one interval) after
 
 const initialState = {
   duration: 2 * 60 * 1000, // The duration to trigger a new alarm state in ms
-  tolerance: 1000, // Sometimes the request takes a bit of time to arrive, add a ms tolerance so we don't miss it
+  tolerance: 1000, // Sometimes the request arrives too early (setInterval() isn't exact), add a ms tolerance so we don't miss it
   startDate: undefined, // The start of the current streak of readings which pass the threshold
   threshold: 1,
   triggered: false, // A flag to signal when the alarm has been triggered. Checked by the alarms reducer
@@ -17,8 +17,8 @@ const update = (state, reading, comparator) => {
   let { threshold, duration, alarming, startDate } = state;
   let triggered = false;
 
+  // Only want to reset if the streak has been broken in a previous state
   if (comparator(reading.value, threshold)) {
-    // Only want to reset if the streak has been broken
     startDate = typeof startDate === 'undefined' ? reading.date : startDate;
   }
   else {

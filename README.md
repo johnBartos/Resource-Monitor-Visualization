@@ -58,26 +58,27 @@ which has a time and a value. There are 4 states, two of which generate an alert
       11 -> alarm trigger event
 
 The state machine's job is threefold: to record the beginning of an abnormal load period (represented as `startDate`),
-trigger an alert when the load period exceeds a set duration (represented as `trigger`), and to toggle the alarm state
+to trigger an alert when the load period exceeds a set duration (represented as `trigger`), and to toggle the alarm state
 whenever an alert is triggered (represented as `alarming`).
 Using this 4-bit state, the state machine is able to represent both the initial trigger and resolution, as well as in-between
 periods.
 
 The determination for triggering is done by checking whether the difference between the current `reading`'s date and
 `startDate` exceeds `duration`. A small tolerance is added to this comparison to account for delay from generation to
- reception.
+ reception, since `setInterval` sometimes triggers a bit too soon.
 
 ##### How multiple alarms are managed - `alarms.js`
 `loadAlarm.js` isn't directly part of Redux's state tree. Instead, the reducer `alarms.js` invokes the `loadAlarm`
 reducer and saves the result in an associative array keyed to the alarm's `id`. Whenever a reading is received, `alarms`
 does four things:
+
 1. Retrieve the last state of the alarm at `id`
 2. Calculate the next state of that alarm by calling `loadAlarm` with the last state and current action
 3. Checks the flags of the next state and generates an alert if `trigger` is true
 4. Replaces the last state with the next state
 
 By indirectly using the `loadAlarm` reducer, we're able to manage multiple alarms in one reducer and retain the simplicity
-of managing only one.
+of managing a single alarm.
 
 ##### Load Generation - `loadGenerator.js`
 Since Windows doesn't have the concept of CPU load, I made an ES6 `function*` generator to simulate it for me. On each
@@ -89,14 +90,17 @@ request, it either returns a high load reading or a normal load based on the cur
 ### Improvements
 ##### Appearance
 1. It's not ugly, but it's not pretty either
+    - Needs better whitespacing
+    - Needs consistency between colors/sizes
 2. Better representation of all alarms on the page
     - No scrollbar would be ideal
     - Better association of trigger -> resolve
 3. Better graph styling
     - I initially went for a multi-line plot, but it was too cramped
-    - Visual ques to indicate the three plots are related
+    - Visual cues to indicate the three plots are related
     - Better indication of trigger/resolve zones
     - Resolve clipping/overlap of some elements
+    - Better indication of where the load threshold is
 4. Improved responsiveness
     - Page is fully responsive, but the graph gets cramped when small
     - Key media breakpoints to graph ticks/range/etc
@@ -125,6 +129,7 @@ request, it either returns a high load reading or a normal load based on the cur
 2. All d3 logic is in one function
     - Definitely won't scale
 4. Unit testing React components
+    - use `shallowRender`
 5. Further componentization
     - Alerts can be their own component instead of a `li`
         - Will be useful if interactivity is added
@@ -132,6 +137,12 @@ request, it either returns a high load reading or a normal load based on the cur
 6. Use constants instead of strings for actions
 7. Better naming conventions
 8. More graceful handling of graph before load has appeared
+9. Elimination of hard-coded variables
+    - Graph is fixed to 10 minutes with a threshold of 1
+    - Alarm parameters (duration, threshold) are fixed at the defaults
+        - Can easily be set with Redux actions
+    - Alarms added are hardcoded to 'one', 'five', and 'fifteen'
+
 
 The largest improvement, however, is adding tolerance for delays with regards to the updating of load at
 set intervals. This a problem for two reasons: `setInterval` isn't guaranteed to delay by the set amount, and the request
@@ -141,8 +152,8 @@ problems:
 
 1. Discrepancy between real CPU load and load represented on the graph
 2. Potential miss of alarm periods
-    - If the CPU load spikes and we miss it due to network delay, an alarm could be triggered improperly because `startDate`
-    was not reset
+    - If the CPU load spikes and it's missed due to network delay, an alarm could be triggered improperly/resolved
+    because `startDate` was not reset
 
 I believe this could be solved by collect the load server-side at set intervals, map it in a table, and serve the load
 mapped to request time.
