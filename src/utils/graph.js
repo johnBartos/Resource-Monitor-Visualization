@@ -104,7 +104,7 @@ export function draw(svgOptions, readings, alarms) {
     .attr('class', 'alarmText')
     .attr('text-anchor', 'middle')
     .attr('fill', 'black')
-    .attr('visibility', d => x(d.resolved.date))
+    .attr('visibility', d => x(d.triggered.date))
     .attr('x', d => x(d.triggered.date))
     .attr('y', 0)
     .text('triggered');
