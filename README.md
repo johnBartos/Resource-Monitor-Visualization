@@ -149,7 +149,7 @@ request, it either returns a high load reading or a normal load based on the cur
     - Alarms added are hardcoded to 'one', 'five', and 'fifteen'
 
 ##### Known Bugs
-1. `setInterval()` sometimes triggers too early. This effect can snowball and cause a reading to be "missed", incurring an inaccuracy of 10s. The normal difference between the the one minute average's first alarming period (trigger -> resolve) is 2:30. The bug results in 2:40. Tests show that the alarming logic is working as intended.
+1. `setInterval()` isn't guaranteed to be accurate. This inaccuracy can cause inaccuracy in alarming periods - typically around 10s. The normal difference between the the one minute average's first alarming period (trigger -> resolve) is 2:30. The bug results in 2:40. Tests show that the alarming logic is working as intended.
 
 
 The largest improvement, however, is adding tolerance for delays with regards to the updating of load at
