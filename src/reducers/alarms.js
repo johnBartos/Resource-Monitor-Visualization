@@ -2,11 +2,14 @@ import loadAlarm from './loadAlarm';
 
 /*
   Manages the state of each alarm and generates events based on their next state
+  loadAlarm state:
+  ================
   alarming | triggered
   00 -> no event
   01 -> alarm resolution event
   10 -> no event
   11 -> alarm trigger event
+  ================
  */
 
 const initialState = {
@@ -26,7 +29,7 @@ const addAlarmEvents = (state, nextAlarmState, payload) => {
     alarms.push({
       date: payload.date,
       value: payload.value,
-      resolution: !nextAlarmState.alarming // When alarming is true, the alarm is entering the resolution state
+      resolution: !nextAlarmState.alarming // When alarming is true, the alarm has been triggered (not resolving)
     });
   }
   return alarms;
@@ -39,7 +42,7 @@ export default (state = initialState, action) => {
         ...state,
         loadAlarms: {
           ...state.loadAlarms,
-          [action.payload.id]: loadAlarm(undefined, {})
+          [action.payload.id]: loadAlarm(undefined, {}) // Gets the initial state of the reducer
         },
         loadAlarmEvents: {
           ...state.loadAlarmEvents,
@@ -83,7 +86,6 @@ function groupLoadAlarmEvents(events) {
       resolved: events[i + 1]
     });
   }
-
   return groupedEvents;
 }
 

@@ -1,8 +1,14 @@
+/*
+Simulates CPU load
+The first alarm should trigger 2 minutes from start
+It should resolve 2 minutes 30 seconds from the trigger
+ */
 const oneMinAvg = [...Array(30).fill(1).map(e => Math.random() + e), ...Array(15).fill(0).map(() => Math.random())];
 
-let oneIndex = 15;
-let fiveIndex = 15;
-let fifteenIndex = 15;
+const startIndex = 15;
+let oneIndex = startIndex;
+let fiveIndex = startIndex;
+let fifteenIndex = startIndex;
 
 function* loadGenerator() {
   while (true) {
@@ -12,9 +18,9 @@ function* loadGenerator() {
       fifteen: oneMinAvg.slice(fifteenIndex - 15, fifteenIndex).reduce((p, c) => p + c) / 15
     };
 
-    oneIndex = Math.max(oneIndex, (oneIndex + 1) % oneMinAvg.length);
-    fiveIndex = Math.max(fiveIndex, (fiveIndex + 1) % oneMinAvg.length);
-    fifteenIndex = Math.max(fifteenIndex, (fifteenIndex + 1) % oneMinAvg.length);
+    oneIndex = Math.max(startIndex, (oneIndex + 1) % oneMinAvg.length);
+    fiveIndex = Math.max(startIndex, (fiveIndex + 1) % oneMinAvg.length);
+    fifteenIndex = Math.max(startIndex, (fifteenIndex + 1) % oneMinAvg.length);
   }
 }
 

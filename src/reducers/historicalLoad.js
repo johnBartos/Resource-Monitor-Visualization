@@ -1,5 +1,5 @@
 const initialState = {
-  threshold: 10 * 60 * 1000, // The range of readings we're collecting in ms = 10 minutes
+  threshold: 10 * 60 * 1000, // The range of readings we're collecting in ms - 10 minutes
   readings: {}
 };
 

@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import alarms from '../alarms';
 import loadAlarm from '../loadAlarm';
 
+// 13 readings at 10s apart = 2 minutes
 const makeActions = (value, now) => {
   const actions = [];
   for (let i = 1; i <= 13; i += 1) {

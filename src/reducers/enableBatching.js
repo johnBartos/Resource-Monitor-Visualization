@@ -1,4 +1,4 @@
-//A higher-order reducer to enable reducers to respond to an array of actions
+// A higher-order reducer to enable the passed reducer to respond to an array of actions and produce a single state
 export default reducer => {
   return (state, action) => {
     switch (action.type) {
