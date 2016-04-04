@@ -72,7 +72,7 @@ The determination for triggering is done by checking whether the difference betw
 reducer and saves the result in an associative array keyed to the alarm's `id`. Whenever a reading is received, `alarms`
 does four things:
 
-1. Retrieve the last state of the alarm at `id`
+1. Retrieve the last state of the alarm by th payload's `id`
 2. Calculate the next state of that alarm by calling `loadAlarm` with the last state and current action
 3. Checks the flags of the next state and generates an alert if `trigger` is true
 4. Replaces the last state with the next state
@@ -131,7 +131,7 @@ request, it either returns a high load reading or a normal load based on the cur
 4. Unit testing React components
     - use `shallowRender`
 5. Further componentization
-    - Alerts can be their own component instead of a `li`
+    - Alerts can be their own component instead of just an `li`
         - Will be useful if interactivity is added
 5. Better testing overall - can eliminate a lot of code by using `sinon` for mocks
 6. Use constants instead of strings for actions
@@ -152,10 +152,10 @@ problems:
 
 1. Discrepancy between real CPU load and load represented on the graph
 2. Potential miss of alarm periods
-    - If the CPU load spikes and it's missed due to network delay, an alarm could be triggered improperly/resolved
+    - If the CPU load spikes and it's missed due to network delay, an alarm could be triggered/resolved improperly
     because `startDate` was not reset
 
-I believe this could be solved by collect the load server-side at set intervals, map it in a table, and serve the load
+I believe this could be solved by collecting the load server-side at set intervals, map it in a table, and serve the load
 mapped to request time.
 
 
